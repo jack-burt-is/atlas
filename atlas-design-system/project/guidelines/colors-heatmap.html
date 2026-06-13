@@ -1,0 +1,28 @@
+<!-- @dsCard group="Colors" viewport="700x172" name="Exploration heatmap" subtitle="Gold-on-ink ramp for coverage grids — unexplored to fully explored" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>
+  body{margin:0;padding:22px 24px;background:var(--bg-app);font-family:var(--font-sans)}
+  .ramp{display:flex;gap:10px;align-items:flex-end;margin-bottom:16px}
+  .sw{display:flex;flex-direction:column;gap:7px;align-items:center}
+  .chip{width:92px;height:48px;border-radius:8px;border:1px solid var(--border-subtle)}
+  .nm{font-family:var(--font-mono);font-size:9px;color:var(--text-secondary)}
+  .lbl{font-family:var(--font-mono);font-size:9px;color:var(--text-faint)}
+  .demo{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;max-width:560px}
+  .cell{aspect-ratio:1;border-radius:2px}
+</style></head><body>
+<div class="ramp">
+  <div class="sw"><div class="chip" style="background:var(--heat-0)"></div><span class="nm">heat-0</span><span class="lbl">none</span></div>
+  <div class="sw"><div class="chip" style="background:var(--heat-1)"></div><span class="nm">heat-1</span></div>
+  <div class="sw"><div class="chip" style="background:var(--heat-2)"></div><span class="nm">heat-2</span></div>
+  <div class="sw"><div class="chip" style="background:var(--heat-3)"></div><span class="nm">heat-3</span></div>
+  <div class="sw"><div class="chip" style="background:var(--heat-4)"></div><span class="nm">heat-4</span><span class="lbl">full</span></div>
+</div>
+<div class="demo" id="demo"></div>
+<script>
+  const heats=['--heat-0','--heat-0','--heat-1','--heat-2','--heat-3','--heat-4'];
+  const d=document.getElementById('demo');
+  for(let i=0;i<26*3;i++){const c=document.createElement('div');c.className='cell';
+    const r=Math.floor(Math.pow(Math.random(),1.5)*heats.length);
+    c.style.background=`var(${heats[r]})`;d.appendChild(c);}
+</script>
+</body></html>

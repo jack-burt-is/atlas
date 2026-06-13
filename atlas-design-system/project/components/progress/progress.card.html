@@ -1,0 +1,57 @@
+<!-- @dsCard group="Components" viewport="700x440" name="Progress · bars, rings, stats, heatmap" subtitle="The completion motifs at the heart of Atlas" -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+  body{margin:0;padding:26px;background:var(--bg-app);font-family:var(--font-sans)}
+  .lbl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:640px}
+  .bars{display:flex;flex-direction:column;gap:16px}
+  .rings{display:flex;gap:20px;align-items:center}
+  .stats{display:flex;gap:34px;margin-top:24px}
+  .sec{margin-bottom:8px}
+</style></head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { ProgressBar, ProgressRing, StatBlock, HeatGrid, Icon } = window.AtlasDesignSystem_e1d28e;
+  function Demo(){
+    return (
+      <div>
+        <div className="grid">
+          <div>
+            <div className="lbl">Progress bars</div>
+            <div className="bars">
+              <ProgressBar label="Wainwrights" value={121} max={214}/>
+              <ProgressBar label="Pennine Way" value={64} color="sky"/>
+              <ProgressBar label="County Tops" value={91} color="spruce"/>
+              <ProgressBar label="South West Coast Path" value={100}/>
+            </div>
+          </div>
+          <div>
+            <div className="lbl">Completion rings</div>
+            <div className="rings">
+              <ProgressRing value={68} label="Lakes"/>
+              <ProgressRing value={43} max={282} size={88} label="Munros"/>
+              <ProgressRing value={100} size={88} color="gold">
+                <Icon name="check" size={26} color="var(--gold-400)"/>
+              </ProgressRing>
+            </div>
+          </div>
+        </div>
+        <div className="lbl" style={{marginTop:26}}>Exploration heatmap</div>
+        <HeatGrid columns={34} rows={5} cell={12}/>
+        <div className="stats">
+          <StatBlock label="Outdoor Score" value="14,820" gold/>
+          <StatBlock label="Summits" value="312"/>
+          <StatBlock label="Distance" value="4,109" sub="km lifetime"/>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

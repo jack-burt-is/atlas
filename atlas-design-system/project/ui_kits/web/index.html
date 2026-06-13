@@ -1,0 +1,106 @@
+<!-- @dsCard group="Web App" viewport="1320x900" name="Atlas web dashboard" subtitle="Power-user dashboard — score, activity, collections, region pages" -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas · Web</title>
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  html,body{margin:0;height:100%}
+  body{background:var(--bg-app);font-family:var(--font-sans)}
+  #root{height:100vh}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:var(--ink-700);border-radius:8px;border:2px solid var(--ink-900)}
+  ::-webkit-scrollbar-track{background:transparent}
+</style></head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="data.js"></script>
+<script type="text/babel" src="Shell.jsx"></script>
+<script type="text/babel" src="Dashboard.jsx"></script>
+<script type="text/babel" src="Region.jsx"></script>
+<script type="text/babel" src="Map.jsx"></script>
+<script type="text/babel" src="Achievements.jsx"></script>
+<script type="text/babel" src="Collections.jsx"></script>
+<script type="text/babel">
+  const DS = window.AtlasDesignSystem_e1d28e;
+  const { Icon, Button } = DS;
+
+  const TITLES = {
+    dashboard: ['Dashboard', 'Your lifetime exploration record'],
+    regions: ['Lake District', 'Region progress'],
+    map: ['Exploration Map', 'Every peak, trail & landmark across the Lake District'],
+    collections: ['Collections', 'Every list you\u2019re chasing \u00b7 peaks, trails & landmarks'],
+    achievements: ['Achievements', 'Your trophy case · points, tiers & progress'],
+    stats: ['Statistics', 'Coming soon in this kit'],
+    sources: ['Connected sources', 'Coming soon in this kit'],
+  };
+
+  function TopBar({ active, theme, setTheme }) {
+    const [t, sub] = TITLES[active] || TITLES.dashboard;
+    return (
+      <header style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+        padding: '0 28px', height: 68, flex: '0 0 68px',
+        borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-base)',
+      }}>
+        <div>
+          <h2 style={{ font: 'var(--type-h2)', fontSize: 20, color: 'var(--text-primary)', margin: 0 }}>{t}</h2>
+          <div style={{ fontSize: 12.5, color: 'var(--text-muted)', marginTop: 1 }}>{sub}</div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 14px', height: 38, borderRadius: 'var(--radius-pill)', background: 'var(--surface-card)', border: '1px solid var(--border-default)', color: 'var(--text-muted)', fontSize: 13, width: 200 }}>
+            <Icon name="search" size={16} /> Search peaks, trails…
+          </div>
+          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title="Toggle appearance" aria-label="Toggle appearance" style={{
+            width: 38, height: 38, flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 'var(--radius-pill)', cursor: 'pointer',
+            background: 'var(--surface-card)', border: '1px solid var(--border-default)', color: 'var(--text-secondary)',
+          }}>
+            <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={17} />
+          </button>
+          <Button variant="primary" size="sm" leftIcon={<Icon name="plus" size={15} />}>Connect source</Button>
+        </div>
+      </header>
+    );
+  }
+
+  function Placeholder({ name }) {
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, color: 'var(--text-muted)' }}>
+        <Icon name="compass" size={40} color="var(--text-faint)" />
+        <div style={{ font: 'var(--type-h3)', color: 'var(--text-secondary)' }}>{name}</div>
+        <div style={{ fontSize: 13 }}>This surface isn't built out in the kit — see Dashboard &amp; Lake District.</div>
+      </div>
+    );
+  }
+
+  function App() {
+    const [active, setActive] = React.useState('dashboard');
+    const [theme, setTheme] = React.useState('dark');
+    React.useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+    React.useEffect(() => { if (window.lucide) window.lucide.createIcons(); });
+    const onNav = (id) => setActive(id);
+
+    let view;
+    if (active === 'dashboard') view = <window.WebDashboard onNav={onNav} />;
+    else if (active === 'regions') view = <window.WebRegion onNav={onNav} />;
+    else if (active === 'achievements') view = <window.WebAchievements onNav={onNav} />;
+    else if (active === 'collections') view = <window.WebCollections onNav={onNav} />;
+    else if (active === 'map') view = <window.WebMap onNav={onNav} theme={theme} />;
+    else view = <Placeholder name={(TITLES[active] || [])[0]} />;
+
+    return (
+      <window.AtlasWebShell active={active} onNav={onNav}>
+        <TopBar active={active} theme={theme} setTheme={setTheme} />
+        <div style={{ flex: 1, overflowY: 'auto' }}>{view}</div>
+      </window.AtlasWebShell>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body></html>

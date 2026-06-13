@@ -1,0 +1,9 @@
+packages:
+  - "packages/*"
+allowBuilds:
+  "@node-rs/argon2": true
+  aws-sdk: true
+  cpu-features: true
+  esbuild: true
+  protobufjs: true
+  ssh2: true

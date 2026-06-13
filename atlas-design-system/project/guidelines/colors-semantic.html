@@ -1,0 +1,26 @@
+<!-- @dsCard group="Colors" viewport="700x180" name="Semantic surfaces & text" subtitle="Stacked surfaces, borders and the text hierarchy on dark" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>
+  body{margin:0;padding:22px 24px;background:var(--bg-app);font-family:var(--font-sans);display:flex;gap:20px}
+  .stack{flex:1;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-default)}
+  .layer{padding:11px 14px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)}
+  .text{flex:1;display:flex;flex-direction:column;gap:9px;justify-content:center}
+  .text span{font-size:15px}
+  .t1{color:var(--text-primary);font-weight:600}.t2{color:var(--text-secondary)}.t3{color:var(--text-muted)}.t4{color:var(--text-faint)}
+  .lab{font-family:var(--font-mono);font-size:9px;color:var(--text-faint);margin-left:8px}
+</style></head><body>
+<div class="stack">
+  <div class="layer" style="background:var(--bg-app)">bg-app</div>
+  <div class="layer" style="background:var(--surface-sunken)">surface-sunken</div>
+  <div class="layer" style="background:var(--surface-card)">surface-card</div>
+  <div class="layer" style="background:var(--surface-raised)">surface-raised</div>
+  <div class="layer" style="background:var(--surface-hover)">surface-hover</div>
+</div>
+<div class="text">
+  <span class="t1">Primary text<span class="lab">text-primary</span></span>
+  <span class="t2">Secondary text<span class="lab">text-secondary</span></span>
+  <span class="t3">Muted text<span class="lab">text-muted</span></span>
+  <span class="t4">Faint / disabled<span class="lab">text-faint</span></span>
+  <span style="color:var(--text-accent);font-weight:600">Accent text<span class="lab">text-accent</span></span>
+</div>
+</body></html>

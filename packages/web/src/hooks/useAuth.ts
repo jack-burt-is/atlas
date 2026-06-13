@@ -1,0 +1,16 @@
+import { useQuery } from "@tanstack/react-query";
+import { fetchMe, type User } from "../api/auth";
+
+export function useAuth(): { user: User | null; isLoading: boolean } {
+  const query = useQuery({
+    queryKey: ["me"],
+    queryFn: fetchMe,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    user: query.data?.user ?? null,
+    isLoading: query.isLoading,
+  };
+}

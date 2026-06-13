@@ -1,0 +1,63 @@
+<!-- @dsCard group="Components" viewport="700x430" name="Core · buttons, badges, tags, avatar" subtitle="Foundational primitives — gold-first actions, mono status badges" -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+  body{margin:0;padding:26px;background:var(--bg-app);font-family:var(--font-sans)}
+  .wrap{display:flex;flex-direction:column;gap:22px;max-width:640px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .lbl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);margin-bottom:10px}
+  .sec{display:flex;flex-direction:column}
+</style></head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { Button, Badge, Tag, Card, Avatar, Icon } = window.AtlasDesignSystem_e1d28e;
+  function Demo(){
+    const [sel,setSel] = React.useState('munros');
+    return (
+      <div className="wrap">
+        <div className="sec"><div className="lbl">Buttons</div>
+          <div className="row">
+            <Button variant="primary" leftIcon={<Icon name="plus" size={16}/>}>Connect a source</Button>
+            <Button variant="secondary">View all</Button>
+            <Button variant="ghost">Skip</Button>
+            <Button variant="danger" size="sm">Remove</Button>
+            <Button variant="primary" disabled>Disabled</Button>
+          </div>
+        </div>
+        <div className="sec"><div className="lbl">Badges &amp; tiers</div>
+          <div className="row">
+            <Badge variant="gold" dot>In progress</Badge>
+            <Badge variant="success" icon={<Icon name="check" size={12}/>}>Completed</Badge>
+            <Badge variant="info">64%</Badge>
+            <Badge variant="bronze">Bronze</Badge>
+            <Badge variant="silver">Silver</Badge>
+            <Badge variant="solid">Gold</Badge>
+            <Badge variant="platinum">Platinum</Badge>
+          </div>
+        </div>
+        <div className="sec"><div className="lbl">Filter tags</div>
+          <div className="row">
+            {[['munros','Munros',282],['wmain','Wainwrights',214],['trails','Trails',15],['land','Landmarks',60]].map(([id,t,c])=>(
+              <Tag key={id} selected={sel===id} count={c} onClick={()=>setSel(id)}>{t}</Tag>
+            ))}
+          </div>
+        </div>
+        <div className="row" style={{gap:18}}>
+          <Avatar name="Maya Okonkwo" level={24} ring/>
+          <Avatar name="Tom Reilly" size={44}/>
+          <Card emphasis pad="sm" style={{display:'flex',alignItems:'center',gap:10}}>
+            <Icon name="trophy" size={18} color="var(--gold-400)"/>
+            <span style={{color:'var(--text-primary)',fontWeight:600,fontSize:14}}>Achievement unlocked</span>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

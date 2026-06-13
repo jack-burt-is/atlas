@@ -1,0 +1,29 @@
+<!-- @dsCard group="Colors" viewport="700x180" name="Accent trio" subtitle="Sky for in-progress data · Spruce for completed/explored · Coral for alerts" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>
+  body{margin:0;padding:22px 24px;background:var(--bg-app);font-family:var(--font-sans)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .col h4{margin:0 0 10px;font:var(--fw-semibold) 13px var(--font-display);color:var(--text-primary)}
+  .row{display:flex;gap:8px}
+  .sw{display:flex;flex-direction:column;gap:6px;flex:1}
+  .chip{height:52px;border-radius:8px;border:1px solid var(--border-subtle)}
+  .nm{font-family:var(--font-mono);font-size:9px;color:var(--text-secondary)}
+</style></head><body>
+<div class="grid">
+  <div class="col"><h4 style="color:var(--sky-400)">Sky · in-progress</h4><div class="row">
+    <div class="sw"><div class="chip" style="background:var(--sky-300)"></div><span class="nm">300</span></div>
+    <div class="sw"><div class="chip" style="background:var(--sky-400)"></div><span class="nm">400</span></div>
+    <div class="sw"><div class="chip" style="background:var(--sky-500)"></div><span class="nm">500</span></div>
+  </div></div>
+  <div class="col"><h4 style="color:var(--spruce-400)">Spruce · completed</h4><div class="row">
+    <div class="sw"><div class="chip" style="background:var(--spruce-300)"></div><span class="nm">300</span></div>
+    <div class="sw"><div class="chip" style="background:var(--spruce-400)"></div><span class="nm">400</span></div>
+    <div class="sw"><div class="chip" style="background:var(--spruce-500)"></div><span class="nm">500</span></div>
+  </div></div>
+  <div class="col"><h4 style="color:var(--coral-400)">Coral · alerts</h4><div class="row">
+    <div class="sw"><div class="chip" style="background:var(--coral-300)"></div><span class="nm">300</span></div>
+    <div class="sw"><div class="chip" style="background:var(--coral-400)"></div><span class="nm">400</span></div>
+    <div class="sw"><div class="chip" style="background:var(--coral-500)"></div><span class="nm">500</span></div>
+  </div></div>
+</div>
+</body></html>

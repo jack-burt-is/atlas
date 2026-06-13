@@ -1,0 +1,105 @@
+/* ============================================================
+   ATLAS · COLORS
+   Dark-first, cartographic-night palette.
+   Summit Gold is the brand: achievement, completion, score.
+   ============================================================ */
+
+:root {
+  /* ---- Neutrals · cool cartographic ink ---- */
+  --ink-950: #090C10;   /* app background, deepest */
+  --ink-900: #0C1117;   /* base canvas */
+  --ink-850: #11171F;   /* sunken / inset */
+  --ink-800: #161D26;   /* card surface */
+  --ink-750: #1B2530;   /* raised surface */
+  --ink-700: #222E3A;   /* hover surface */
+  --ink-600: #2E3C49;   /* dividers, strong */
+  --ink-500: #3D4D5C;   /* subtle borders on light */
+  --ink-400: #566777;   /* faint text / disabled */
+  --ink-300: #7D8D9C;   /* muted text */
+  --ink-200: #A9B7C3;   /* secondary text */
+  --ink-100: #D2DBE3;   /* high text */
+  --ink-50:  #EAEFF3;   /* primary text */
+  --white:   #FFFFFF;
+
+  /* ---- Summit Gold · primary brand ---- */
+  --gold-300: #FFD888;
+  --gold-400: #FBC555;
+  --gold-500: #F4B740;  /* PRIMARY */
+  --gold-600: #E0A026;
+  --gold-700: #B87C14;
+
+  /* ---- Sky · information / in-progress ---- */
+  --sky-300: #84D3F2;
+  --sky-400: #46B6E8;
+  --sky-500: #2B9ED4;
+
+  /* ---- Spruce · completed / explored / success ---- */
+  --spruce-300: #74DC9E;
+  --spruce-400: #37BE76;
+  --spruce-500: #1E9B5A;
+
+  /* ---- Coral · alerts / rare / danger ---- */
+  --coral-300: #F79683;
+  --coral-400: #F2705A;
+  --coral-500: #E0503F;
+
+  /* ---- Achievement tiers ---- */
+  --tier-bronze:   #C77B43;
+  --tier-silver:   #B4C1CD;
+  --tier-gold:     #F4B740;
+  --tier-platinum: #8FE0E6;
+
+  /* ---- Exploration heatmap · gold ramp on ink (GitHub-style) ---- */
+  --heat-0: #19222C;   /* unexplored */
+  --heat-1: #3E3518;
+  --heat-2: #715C1B;
+  --heat-3: #AC831E;
+  --heat-4: #F4B740;   /* fully explored */
+
+  /* ============================================================
+     SEMANTIC ALIASES
+     ============================================================ */
+
+  /* Backgrounds & surfaces */
+  --bg-app:          var(--ink-950);
+  --bg-base:         var(--ink-900);
+  --bg-stage:        radial-gradient(1100px 700px at 50% -8%, #11171f, var(--ink-950));  /* area behind device mocks */
+  --surface-sunken:  var(--ink-850);
+  --surface-card:    var(--ink-800);
+  --surface-raised:  var(--ink-750);
+  --surface-hover:   var(--ink-700);
+  --surface-overlay: rgba(12, 17, 23, 0.72);  /* used with backdrop-blur */
+  --scrim:           rgba(6, 9, 13, 0.66);
+
+  /* Borders */
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong:  rgba(255, 255, 255, 0.16);
+  --border-gold:    rgba(244, 183, 64, 0.45);
+
+  /* Text */
+  --text-primary:   var(--ink-50);
+  --text-secondary: var(--ink-200);
+  --text-muted:     var(--ink-300);
+  --text-faint:     var(--ink-400);
+  --text-on-gold:   var(--ink-950);
+  --text-accent:    var(--gold-400);
+
+  /* Interactive accent */
+  --accent:        var(--gold-500);
+  --accent-hover:  var(--gold-400);
+  --accent-press:  var(--gold-600);
+  --accent-soft:   rgba(244, 183, 64, 0.12);  /* tinted fills */
+  --accent-soft-2: rgba(244, 183, 64, 0.20);
+  --focus-ring:    rgba(251, 197, 85, 0.55);
+
+  /* Status */
+  --status-success: var(--spruce-400);
+  --status-info:    var(--sky-400);
+  --status-warning: var(--gold-500);
+  --status-danger:  var(--coral-500);
+
+  --success-soft: rgba(55, 190, 118, 0.14);
+  --info-soft:    rgba(70, 182, 232, 0.14);
+  --danger-soft:  rgba(224, 80, 63, 0.14);
+}

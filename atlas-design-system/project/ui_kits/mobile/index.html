@@ -1,0 +1,76 @@
+<!-- @dsCard group="Mobile App" viewport="402x720" name="Atlas mobile app" subtitle="Home · Explore · Collections · Achievements · Profile — interactive" -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas · Mobile</title>
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  html,body{margin:0;height:100%}
+  body{background:var(--bg-stage);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;box-sizing:border-box;font-family:var(--font-sans)}
+  /* hide scrollbars inside the phone for a clean look */
+  .noscroll::-webkit-scrollbar{width:0;height:0}
+  .noscroll{scrollbar-width:none}
+</style></head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../../_ds_bundle.js"></script>
+<script src="data.js"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="Chrome.jsx"></script>
+<script type="text/babel" src="HomeScreen.jsx"></script>
+<script type="text/babel" src="ExploreScreen.jsx"></script>
+<script type="text/babel" src="CollectionsScreen.jsx"></script>
+<script type="text/babel" src="AchievementsScreen.jsx"></script>
+<script type="text/babel" src="ProfileScreen.jsx"></script>
+<script type="text/babel">
+  const { IOSDevice } = window;
+
+  function App() {
+    const [tab, setTab] = React.useState('home');
+    const [detail, setDetail] = React.useState(null);
+    const [theme, setTheme] = React.useState('dark');
+    const scrollRef = React.useRef(null);
+
+    React.useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+
+    const go = (t, d = null) => {
+      setTab(t);
+      setDetail(d);
+      if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    };
+
+    React.useEffect(() => {
+      // (re)draw lucide icons after each render
+      if (window.lucide) window.lucide.createIcons();
+    });
+
+    let screen;
+    if (tab === 'home') screen = <window.HomeScreen go={go} />;
+    else if (tab === 'explore') screen = <window.ExploreScreen theme={theme} />;
+    else if (tab === 'collections') screen = <window.CollectionsScreen go={(id) => setDetail(id)} detail={detail} onBack={() => setDetail(null)} />;
+    else if (tab === 'achievements') screen = <window.AchievementsScreen />;
+    else screen = <window.ProfileScreen theme={theme} setTheme={setTheme} />;
+
+    const isMap = tab === 'explore';
+
+    return (
+      <IOSDevice dark={theme === 'dark'} width={402} height={860}>
+        <div ref={scrollRef} className="noscroll" style={{
+          position: 'absolute', inset: 0, top: 52, display: 'flex', flexDirection: 'column',
+          overflowY: isMap ? 'hidden' : 'auto', background: 'var(--bg-app)',
+        }}>
+          <div style={{ flex: 1, paddingBottom: isMap ? 0 : 8, minHeight: isMap ? '100%' : 'auto', display: isMap ? 'flex' : 'block', flexDirection: 'column' }}>
+            {screen}
+          </div>
+          <window.AtlasTabBar active={tab} onChange={(t) => go(t)} />
+        </div>
+      </IOSDevice>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body></html>

@@ -1,0 +1,52 @@
+<!-- @dsCard group="Components" viewport="700x560" name="Collection · cards, achievements, score" subtitle="The completionist psychology — collections, tiers, Pokédex tiles, score" -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>
+  body{margin:0;padding:26px;background:var(--bg-app);font-family:var(--font-sans)}
+  .lbl{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);margin:0 0 12px}
+  .stack{display:flex;flex-direction:column;gap:12px;max-width:640px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .sec{margin-bottom:24px}
+</style></head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { CollectionCard, AchievementBadge, CollectibleItem, ScoreMeter, Icon } = window.AtlasDesignSystem_e1d28e;
+  const M = (n,s)=> <Icon name={n} size={s}/>;
+  function Demo(){
+    return (
+      <div>
+        <div className="sec"><div className="lbl">Outdoor Score</div>
+          <ScoreMeter score={14820} level={24} levelProgress={62} toNext="680 pts to Level 25"/>
+        </div>
+        <div className="sec"><div className="lbl">Collections</div>
+          <div className="two">
+            <CollectionCard title="Wainwrights" type="Peaks" value={121} max={214} icon={M('mountain',26)}/>
+            <CollectionCard title="Pennine Way" type="National Trail" value={32} max={32} icon={M('route',26)}/>
+          </div>
+        </div>
+        <div className="sec"><div className="lbl">Achievements</div>
+          <div className="stack">
+            <AchievementBadge unlocked tier="gold" points={500} title="Skyliner" description="Climb three 800m summits in one day" icon={M('mountain',24)}/>
+            <AchievementBadge tier="silver" points={250} title="Centurion" description="Visit 100 unique summits" icon={M('lock',20)} progress={{value:78,max:100}}/>
+          </div>
+        </div>
+        <div className="sec"><div className="lbl">Collectibles</div>
+          <div className="tiles">
+            <CollectibleItem collected name="Helvellyn" meta={<b>950m</b>} icon={M('mountain',28)} checkIcon={M('check',13)}/>
+            <CollectibleItem collected name="Scafell Pike" meta={<b>978m</b>} icon={M('mountain',28)} checkIcon={M('check',13)}/>
+            <CollectibleItem name="Skiddaw" meta={<b>931m</b>} icon={M('mountain',28)}/>
+            <CollectibleItem name="Blencathra" meta={<b>868m</b>} icon={M('mountain',28)}/>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

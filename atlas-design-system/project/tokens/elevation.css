@@ -1,0 +1,45 @@
+/* ============================================================
+   ATLAS · ELEVATION
+   Radii, borders, shadows, and gold glow.
+   On dark surfaces, depth comes from lighter fills + soft
+   shadows; the gold glow signals achievement / emphasis.
+   ============================================================ */
+
+:root {
+  /* ---- Radii ---- */
+  --radius-xs:   6px;
+  --radius-sm:   8px;
+  --radius-md:   10px;   /* buttons, inputs */
+  --radius-lg:   14px;   /* cards */
+  --radius-xl:   18px;   /* large cards / sheets */
+  --radius-2xl:  24px;
+  --radius-pill: 999px;
+  --radius-full: 9999px;
+
+  /* ---- Border widths ---- */
+  --border-w:        1px;
+  --border-w-strong: 1.5px;
+
+  /* ---- Shadows (dark-surface tuned) ---- */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-sm:  0 2px 6px rgba(0, 0, 0, 0.45);
+  --shadow-md:  0 6px 18px rgba(0, 0, 0, 0.50);
+  --shadow-lg:  0 16px 40px rgba(0, 0, 0, 0.55);
+  --shadow-xl:  0 28px 70px rgba(0, 0, 0, 0.60);
+
+  /* Inset hairline that reads as a top highlight on cards */
+  --ring-top: inset 0 1px 0 rgba(255, 255, 255, 0.05); /* @kind shadow */
+
+  /* ---- Gold glow · achievement & emphasis ---- */
+  --glow-gold-sm: 0 0 0 1px rgba(244, 183, 64, 0.30), 0 4px 16px rgba(244, 183, 64, 0.18);
+  --glow-gold-md: 0 0 0 1px rgba(244, 183, 64, 0.40), 0 8px 30px rgba(244, 183, 64, 0.28);
+  --glow-gold-lg: 0 0 0 1px rgba(244, 183, 64, 0.50), 0 12px 48px rgba(244, 183, 64, 0.38);
+
+  /* Tier glows */
+  --glow-bronze:   0 0 0 1px rgba(199, 123, 67, 0.45), 0 6px 22px rgba(199, 123, 67, 0.25);
+  --glow-silver:   0 0 0 1px rgba(180, 193, 205, 0.45), 0 6px 22px rgba(180, 193, 205, 0.22);
+  --glow-platinum: 0 0 0 1px rgba(143, 224, 230, 0.45), 0 6px 22px rgba(143, 224, 230, 0.25);
+
+  /* ---- Focus ---- */
+  --focus-shadow: 0 0 0 3px var(--focus-ring);
+}

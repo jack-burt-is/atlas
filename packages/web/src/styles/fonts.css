@@ -1,0 +1,6 @@
+/* Atlas webfonts — loaded from Google Fonts.
+   Space Grotesk  → display, headings, large stat numerals
+   Hanken Grotesk → body & UI text
+   Space Mono     → cartographic data (coordinates, elevation, stat labels) */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');

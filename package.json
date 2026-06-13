@@ -1,0 +1,34 @@
+{
+  "name": "atlas",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@11.1.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "dev": "sst dev",
+    "dev:api": "pnpm --filter @atlas/api dev",
+    "dev:web": "pnpm --filter @atlas/web dev",
+    "db:generate": "pnpm --filter @atlas/db generate",
+    "db:migrate": "pnpm --filter @atlas/db migrate",
+    "db:push": "pnpm --filter @atlas/db exec drizzle-kit push --config=drizzle.config.ts",
+    "deploy": "sst deploy",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@node-rs/argon2",
+      "aws-sdk",
+      "cpu-features",
+      "esbuild",
+      "protobufjs",
+      "ssh2"
+    ]
+  }
+}

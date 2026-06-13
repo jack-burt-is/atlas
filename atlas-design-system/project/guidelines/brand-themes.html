@@ -1,0 +1,29 @@
+<!-- @dsCard group="Brand" viewport="700x240" name="Dark & light themes" subtitle="Default dark + the [data-theme=light] paper variant — same tokens, remapped" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../styles.css">
+<style>
+  body{margin:0;padding:20px;background:var(--ink-850);display:grid;grid-template-columns:1fr 1fr;gap:16px;font-family:var(--font-sans)}
+  .pane{border-radius:var(--radius-lg);padding:18px;background:var(--bg-app);border:1px solid var(--border-default)}
+  .lab{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-faint);margin-bottom:12px}
+  .card{background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-sm),var(--ring-top);padding:14px;margin-bottom:10px}
+  .score{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1}
+  .cap{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--text-muted);display:block;margin-bottom:4px}
+  .row{display:flex;gap:6px;margin-top:4px}
+  .chip{height:10px;border-radius:3px;flex:1}
+  .btn{display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:var(--radius-md);background:var(--accent);color:var(--text-on-gold);font-weight:600;font-size:13px;margin-top:10px}
+</style></head>
+<body>
+  <div class="pane">
+    <div class="lab">Default · dark</div>
+    <div class="card"><span class="cap">Outdoor Score</span><span class="score atlas-gold-text">14,820</span>
+      <div class="row"><span class="chip" style="background:var(--heat-1)"></span><span class="chip" style="background:var(--heat-2)"></span><span class="chip" style="background:var(--heat-3)"></span><span class="chip" style="background:var(--heat-4)"></span></div>
+    </div>
+    <span class="btn">Connect a source</span>
+  </div>
+  <div class="pane" data-theme="light">
+    <div class="lab">Preference · light</div>
+    <div class="card"><span class="cap">Outdoor Score</span><span class="score atlas-gold-text">14,820</span>
+      <div class="row"><span class="chip" style="background:var(--heat-1)"></span><span class="chip" style="background:var(--heat-2)"></span><span class="chip" style="background:var(--heat-3)"></span><span class="chip" style="background:var(--heat-4)"></span></div>
+    </div>
+    <span class="btn">Connect a source</span>
+  </div>
+</body></html>
