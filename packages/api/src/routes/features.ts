@@ -144,9 +144,9 @@ router.get("/regions", requireAuth, async (c) => {
   });
 });
 
-router.get("/regions/:id", requireAuth, async (c) => {
+router.get("/regions/:slug", requireAuth, async (c) => {
   const user = c.get("user");
-  const { id } = c.req.param();
+  const { slug } = c.req.param();
   const db = getDb();
 
   const regionRows = await db.execute<{
@@ -155,54 +155,117 @@ router.get("/regions/:id", requireAuth, async (c) => {
     slug: string;
     country: string | null;
     description: string | null;
-    created_at: string;
+    hero_image: string | null;
   }>(sql`
-    SELECT id, name, slug, country, description, created_at
-    FROM regions WHERE id = ${id}::uuid LIMIT 1
+    SELECT id, name, slug, country, description, hero_image
+    FROM regions WHERE slug = ${slug} LIMIT 1
   `);
 
   const region = regionRows.rows[0];
   if (!region) return c.json({ error: "Not found" }, 404);
 
-  const coverageRows = await db.execute<{
-    coverage_pct: string;
-    last_updated_at: string;
-  }>(sql`
-    SELECT coverage_pct, last_updated_at
-    FROM user_region_coverage
-    WHERE user_id = ${user.id}::uuid AND region_id = ${id}::uuid
-    LIMIT 1
-  `);
+  const [coverageRows, statsRows, collectionsRows, missingRows] = await Promise.all([
+    db.execute<{ coverage_pct: string }>(sql`
+      SELECT coverage_pct FROM user_region_coverage
+      WHERE user_id = ${user.id}::uuid AND region_id = ${region.id}::uuid
+      LIMIT 1
+    `),
+    db.execute<{
+      total_peaks: string; user_peaks: string;
+      total_trails: string; user_trails: string;
+      total_landmarks: string; user_landmarks: string;
+      total_distance_km: string;
+    }>(sql`
+      SELECT
+        (SELECT COUNT(*) FROM peaks WHERE region = ${region.name}) AS total_peaks,
+        (SELECT COUNT(*) FROM user_peak_log upl JOIN peaks p ON p.id = upl.peak_id
+         WHERE upl.user_id = ${user.id}::uuid AND p.region = ${region.name}) AS user_peaks,
+        (SELECT COUNT(*) FROM trails WHERE region = ${region.name}) AS total_trails,
+        (SELECT COUNT(DISTINCT utp.trail_id) FROM user_trail_progress utp JOIN trails t ON t.id = utp.trail_id
+         WHERE utp.user_id = ${user.id}::uuid AND t.region = ${region.name}) AS user_trails,
+        (SELECT COUNT(*) FROM landmarks WHERE region = ${region.name}) AS total_landmarks,
+        (SELECT COUNT(*) FROM user_landmark_log ull JOIN landmarks l ON l.id = ull.landmark_id
+         WHERE ull.user_id = ${user.id}::uuid AND l.region = ${region.name}) AS user_landmarks,
+        (SELECT COALESCE(SUM(distance_km), 0) FROM trails WHERE region = ${region.name}) AS total_distance_km
+    `),
+    db.execute<{ id: string; name: string; item_count: number; type: string; user_count: string }>(sql`
+      SELECT c.id, c.name, c.item_count, c.type,
+        (SELECT COUNT(*) FROM collection_items ci
+         WHERE ci.collection_id = c.id AND (
+           (ci.item_type = 'peak' AND EXISTS (SELECT 1 FROM user_peak_log upl WHERE upl.peak_id = ci.item_id AND upl.user_id = ${user.id}::uuid))
+           OR (ci.item_type = 'landmark' AND EXISTS (SELECT 1 FROM user_landmark_log ull WHERE ull.landmark_id = ci.item_id AND ull.user_id = ${user.id}::uuid))
+           OR (ci.item_type = 'trail' AND EXISTS (SELECT 1 FROM user_trail_progress utp WHERE utp.trail_id = ci.item_id AND utp.user_id = ${user.id}::uuid))
+         )
+        ) AS user_count
+      FROM collections c
+      WHERE c.region = ${region.name}
+      ORDER BY c.sort_order
+    `),
+    db.execute<{ id: string; name: string; slug: string; elevation_m: number | null }>(sql`
+      SELECT p.id, p.name, p.slug, p.elevation_m
+      FROM peaks p
+      WHERE p.region = ${region.name}
+        AND NOT EXISTS (SELECT 1 FROM user_peak_log upl WHERE upl.peak_id = p.id AND upl.user_id = ${user.id}::uuid)
+      ORDER BY p.elevation_m DESC NULLS LAST
+      LIMIT 10
+    `),
+  ]);
 
   const coverage = coverageRows.rows[0];
-
-  const statsRows = await db.execute<{
-    peak_count: string;
-    landmark_count: string;
-  }>(sql`
-    SELECT
-      (SELECT COUNT(*) FROM user_peak_log upl
-       JOIN peaks p ON p.id = upl.peak_id
-       WHERE upl.user_id = ${user.id}::uuid AND p.region = ${region.name}) AS peak_count,
-      (SELECT COUNT(*) FROM user_landmark_log ull
-       JOIN landmarks l ON l.id = ull.landmark_id
-       WHERE ull.user_id = ${user.id}::uuid AND l.region = ${region.name}) AS landmark_count
-  `);
-
   const stats = statsRows.rows[0];
+  const coveragePct = coverage ? parseFloat(coverage.coverage_pct) : 0;
+
+  const typeColorMap: Record<string, "gold" | "sky" | "spruce"> = {
+    peaks: "gold",
+    trails: "sky",
+    landmarks: "spruce",
+  };
+
+  const gapCount = parseInt(
+    (await db.execute<{ cnt: string }>(sql`
+      SELECT COUNT(*) AS cnt FROM peaks p
+      WHERE p.region = ${region.name}
+        AND NOT EXISTS (SELECT 1 FROM user_peak_log upl WHERE upl.peak_id = p.id AND upl.user_id = ${user.id}::uuid)
+    `)).rows[0]?.cnt ?? "0",
+    10,
+  );
 
   return c.json({
-    region,
-    userCoverage: coverage
-      ? {
-          coveragePct: parseFloat(coverage.coverage_pct),
-          lastUpdatedAt: coverage.last_updated_at,
-        }
-      : { coveragePct: 0, lastUpdatedAt: null },
+    name: region.name,
+    slug: region.slug,
+    subtitle: region.country ?? region.description ?? "",
+    coveragePct,
+    heroImage: region.hero_image,
     stats: {
-      peakCount: parseInt(stats?.peak_count ?? "0", 10),
-      landmarkCount: parseInt(stats?.landmark_count ?? "0", 10),
+      peaks: {
+        value: parseInt(stats?.user_peaks ?? "0", 10),
+        total: parseInt(stats?.total_peaks ?? "0", 10),
+      },
+      trails: {
+        value: parseInt(stats?.user_trails ?? "0", 10),
+        total: parseInt(stats?.total_trails ?? "0", 10),
+      },
+      landmarks: {
+        value: parseInt(stats?.user_landmarks ?? "0", 10),
+        total: parseInt(stats?.total_landmarks ?? "0", 10),
+      },
+      distanceKm: Math.round(parseFloat(stats?.total_distance_km ?? "0")),
     },
+    collections: collectionsRows.rows.map((c) => ({
+      name: c.name,
+      value: parseInt(c.user_count, 10),
+      max: c.item_count,
+      color: typeColorMap[c.type],
+    })),
+    missingNearby: missingRows.rows.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      elevationM: p.elevation_m,
+      collected: false,
+      image: null,
+    })),
+    gapCount,
   });
 });
 

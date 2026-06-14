@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Check, Zap } from "lucide-react";
 import { signup } from "../../api/auth";
+import { startCheckout } from "../../api/billing";
 
 function FieldGroup({ children }: { children: React.ReactNode }) {
   return <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>{children}</div>;
@@ -42,25 +44,163 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   );
 }
 
+// ─── Plan selection step ──────────────────────────────────────────────────────
+
+const PRO_FEATURES = [
+  "Unlimited GPX imports",
+  "Full activity heatmap history",
+  "Advanced analytics",
+];
+
+function PlanStep({ onContinueFree, onUpgradePro, upgrading }: {
+  onContinueFree: () => void;
+  onUpgradePro: () => void;
+  upgrading: boolean;
+}) {
+  return (
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <div className="eyebrow" style={{ marginBottom: "var(--space-2)" }}>
+          One last thing
+        </div>
+        <h1 style={{ font: "var(--type-h2)", color: "var(--text-primary)" }}>
+          Choose your plan
+        </h1>
+        <p style={{ fontSize: 14, color: "var(--text-secondary)", marginTop: 8 }}>
+          Start free and upgrade anytime.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {/* Pro card */}
+        <div style={{
+          padding: "18px 20px",
+          background: "var(--accent-soft)",
+          border: "2px solid var(--border-gold)",
+          borderRadius: "var(--radius-lg)",
+          boxShadow: "var(--glow-gold-sm)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 16, fontWeight: 700, color: "var(--text-accent)" }}>Atlas Pro</span>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+                  background: "var(--accent)", color: "var(--text-on-gold)",
+                  padding: "2px 6px", borderRadius: "var(--radius-pill)",
+                }}>RECOMMENDED</span>
+              </div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 800, color: "var(--text-accent)", marginTop: 2 }}>
+                £4<span style={{ fontSize: 12, fontWeight: 500, color: "var(--text-muted)" }}>/mo</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
+            {PRO_FEATURES.map((f) => (
+              <div key={f} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "var(--text-secondary)" }}>
+                <Check size={13} style={{ color: "var(--text-accent)", flexShrink: 0 }} />
+                {f}
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={onUpgradePro}
+            disabled={upgrading}
+            style={{
+              width: "100%",
+              height: 38,
+              background: upgrading ? "var(--accent-press)" : "var(--accent)",
+              color: "var(--text-on-gold)",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: upgrading ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+            }}
+          >
+            <Zap size={14} />
+            {upgrading ? "Loading checkout…" : "Upgrade to Pro"}
+          </button>
+        </div>
+
+        {/* Free card */}
+        <button
+          onClick={onContinueFree}
+          style={{
+            padding: "14px 20px",
+            background: "var(--surface-sunken)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "var(--radius-lg)",
+            cursor: "pointer",
+            textAlign: "left",
+          }}
+        >
+          <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)" }}>Continue with Free</div>
+          <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 3 }}>
+            Peak tracking, Strava sync, 3 GPX imports/month
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── SignupPage ───────────────────────────────────────────────────────────────
+
 export default function SignupPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [step, setStep] = useState<"account" | "plan">("account");
 
-  const mutation = useMutation({
+  const signupMutation = useMutation({
     mutationFn: signup,
     onSuccess: (data) => {
       qc.setQueryData(["me"], data);
-      void navigate({ to: "/dashboard" });
+      setStep("plan");
+    },
+  });
+
+  const checkoutMutation = useMutation({
+    mutationFn: startCheckout,
+    onSuccess: ({ url }) => {
+      if (url) window.location.href = url;
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate({ name, email, password });
+    signupMutation.mutate({ name, email, password });
   };
+
+  if (step === "plan") {
+    return (
+      <div style={{
+        background: "var(--surface-card)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius-xl)",
+        padding: "var(--space-8)",
+        boxShadow: "var(--shadow-md), var(--ring-top)",
+      }}>
+        <PlanStep
+          upgrading={checkoutMutation.isPending}
+          onContinueFree={() => { void navigate({ to: "/dashboard" }); }}
+          onUpgradePro={() => checkoutMutation.mutate()}
+        />
+        {checkoutMutation.isError && (
+          <p style={{ fontSize: 13, color: "var(--status-danger)", marginTop: 12 }}>
+            {checkoutMutation.error instanceof Error ? checkoutMutation.error.message : "Failed to start checkout"}
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -120,7 +260,7 @@ export default function SignupPage() {
           />
         </FieldGroup>
 
-        {mutation.error && (
+        {signupMutation.error && (
           <div style={{
             padding: "10px 12px",
             background: "var(--danger-soft)",
@@ -129,28 +269,28 @@ export default function SignupPage() {
             fontSize: "var(--text-sm)",
             color: "var(--coral-300)",
           }}>
-            {mutation.error.message}
+            {signupMutation.error.message}
           </div>
         )}
 
         <button
           type="submit"
-          disabled={mutation.isPending}
+          disabled={signupMutation.isPending}
           style={{
             width: "100%",
             height: "var(--control-lg)",
-            background: mutation.isPending ? "var(--accent-press)" : "var(--accent)",
+            background: signupMutation.isPending ? "var(--accent-press)" : "var(--accent)",
             color: "var(--text-on-gold)",
             border: "none",
             borderRadius: "var(--radius-md)",
             fontFamily: "var(--font-sans)",
             fontSize: "var(--text-base)",
             fontWeight: 600,
-            cursor: mutation.isPending ? "not-allowed" : "pointer",
+            cursor: signupMutation.isPending ? "not-allowed" : "pointer",
             transition: "background 0.15s ease",
           }}
         >
-          {mutation.isPending ? "Creating account…" : "Create account"}
+          {signupMutation.isPending ? "Creating account…" : "Create account"}
         </button>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

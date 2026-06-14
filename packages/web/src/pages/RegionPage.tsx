@@ -39,7 +39,7 @@ function RegionContent({ data, slug }: { data: RegionResponse; slug: string }) {
       {/* hero banner */}
       <div className="atlas-topo" style={{
         position: "relative", borderRadius: "var(--radius-xl)", border: "1px solid var(--border-default)",
-        padding: 28, overflow: "hidden", boxShadow: "var(--shadow-md)",
+        padding: 28, overflow: "hidden", boxShadow: "var(--shadow-md)", flexShrink: 0,
       }}>
         {data.heroImage && (
           <img src={data.heroImage} alt="" aria-hidden="true" style={{

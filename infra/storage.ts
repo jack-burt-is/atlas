@@ -27,4 +27,26 @@ export const storage = {
       },
     },
   }),
+  avatars: new sst.aws.Bucket("AtlasAvatars", {
+    access: "public",
+    cors: {
+      allowMethods: ["GET", "PUT"],
+      allowOrigins: ["*"],
+      allowHeaders: ["*", "content-type"],
+      maxAge: "3000 seconds",
+    },
+    transform: {
+      bucket: {
+        serverSideEncryptionConfiguration: {
+          rules: [
+            {
+              applyServerSideEncryptionByDefault: {
+                sseAlgorithm: "AES256",
+              },
+            },
+          ],
+        },
+      },
+    },
+  }),
 };

@@ -7,7 +7,7 @@ import {
   userTrailProgress,
   userLandmarkLog,
 } from "@atlas/db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, gte, count, desc } from "drizzle-orm";
 import { requireAuth } from "../middleware/auth.js";
 import { enqueueProcessActivity } from "../lib/sqs.js";
 import { processGpxLocally, reprocessActivity, recomputeStatsAndAchievements } from "../lib/local-gpx-processor.js";
@@ -17,6 +17,7 @@ const router = new Hono<AppEnv>();
 const s3 = new S3Client({});
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
+const GPX_MONTHLY_LIMIT_FREE = 3;
 
 function isUploadedFile(
   v: unknown,
@@ -27,6 +28,33 @@ function isUploadedFile(
 router.post("/upload", requireAuth, async (c) => {
   const user = c.get("user");
   const bucket = process.env["UPLOADS_BUCKET"];
+  const db = getDb();
+  const now = new Date();
+
+  const isPro = user.plan === "pro" && (!user.planExpiresAt || user.planExpiresAt > now);
+
+  if (!isPro) {
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const [row] = await db
+      .select({ count: count() })
+      .from(activities)
+      .where(
+        and(
+          eq(activities.userId, user.id),
+          eq(activities.sourceType, "gpx"),
+          gte(activities.createdAt, startOfMonth),
+        ),
+      );
+    if ((row?.count ?? 0) >= GPX_MONTHLY_LIMIT_FREE) {
+      return c.json(
+        {
+          error: `Free plan limit: ${GPX_MONTHLY_LIMIT_FREE} GPX imports per month. Upgrade to Pro for unlimited imports.`,
+          limitReached: true,
+        },
+        402,
+      );
+    }
+  }
 
   const body = await c.req.parseBody();
   const gpxFile = body["gpx"];
@@ -38,8 +66,6 @@ router.post("/upload", requireAuth, async (c) => {
     return c.json({ error: "File too large (max 50MB)" }, 413);
   }
 
-  const db = getDb();
-  const now = new Date();
   const buffer = Buffer.from(await gpxFile.arrayBuffer());
 
   const [activity] = await db

@@ -7,6 +7,8 @@ import {
   Trophy,
   BarChart3,
   Plug,
+  CreditCard,
+  ShieldAlert,
   type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
@@ -20,8 +22,9 @@ const NAV_PRIMARY = [
 ];
 
 const NAV_SECONDARY = [
-  { id: "stats", label: "Statistics", icon: BarChart3, to: "/profile" },
-  { id: "sources", label: "Connected sources", icon: Plug, to: "/profile" },
+  { id: "stats", label: "Statistics", icon: BarChart3, to: "/statistics" },
+  { id: "sources", label: "Connected sources", icon: Plug, to: "/connected-sources" },
+  { id: "plan", label: "Plan & Billing", icon: CreditCard, to: "/plan" },
 ];
 
 function NavItem({
@@ -66,6 +69,12 @@ export default function AppShell() {
   const { location } = useRouterState();
   const pathname = location.pathname;
 
+  const initials = user?.name
+    ? user.name.split(" ").map((p) => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase()
+    : (user?.email?.[0]?.toUpperCase() ?? "?");
+
+  const isPro = user?.plan === "pro";
+
   return (
     <div style={{ display: "flex", height: "100vh", background: "var(--bg-app)" }}>
       {/* Sidebar */}
@@ -80,21 +89,8 @@ export default function AppShell() {
         overflow: "hidden",
       }}>
         {/* Logo */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          padding: "0 8px 22px",
-        }}>
-          <span style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 20,
-            letterSpacing: ".06em",
-            color: "var(--text-primary)",
-          }}>
-            ATLAS
-          </span>
+        <div style={{ display: "flex", alignItems: "center", padding: "0 8px 22px" }}>
+          <img src="/atlas-logo.svg" alt="Atlas" style={{ height: 24 }} />
         </div>
 
         {/* Primary nav */}
@@ -120,22 +116,36 @@ export default function AppShell() {
               label={n.label}
               icon={n.icon}
               to={n.to}
-              active={false}
+              active={pathname === n.to}
             />
           ))}
+          {user?.isAdmin && (
+            <NavItem
+              label="Admin"
+              icon={ShieldAlert}
+              to="/admin"
+              active={pathname === "/admin"}
+            />
+          )}
         </nav>
 
         {/* User card */}
         <div style={{ marginTop: "auto" }}>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: 10,
-            borderRadius: "var(--radius-md)",
-            background: "var(--surface-card)",
-            border: "1px solid var(--border-subtle)",
-          }}>
+          <Link
+            to="/profile"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: 10,
+              borderRadius: "var(--radius-md)",
+              background: pathname === "/profile" ? "var(--accent-soft)" : "var(--surface-card)",
+              border: `1px solid ${pathname === "/profile" ? "var(--border-gold)" : "var(--border-subtle)"}`,
+              textDecoration: "none",
+              transition: "background 0.15s ease, border-color 0.15s ease",
+            }}
+          >
+            {/* Avatar */}
             <div style={{
               width: 36,
               height: 36,
@@ -150,10 +160,19 @@ export default function AppShell() {
               fontSize: 14,
               color: "var(--text-accent)",
               flexShrink: 0,
+              overflow: "hidden",
             }}>
-              {user?.name?.[0]?.toUpperCase() ?? "?"}
+              {user?.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name ?? "Avatar"}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              ) : (
+                initials
+              )}
             </div>
-            <div style={{ minWidth: 0 }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{
                 fontSize: 13,
                 fontWeight: 600,
@@ -164,15 +183,11 @@ export default function AppShell() {
               }}>
                 {user?.name ?? "Explorer"}
               </div>
-              <div style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 10,
-                color: "var(--gold-400)",
-              }}>
-                0 pts
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--gold-400)" }}>
+                {isPro ? "Pro" : "Free"}
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </aside>
 

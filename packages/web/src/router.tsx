@@ -57,9 +57,9 @@ function DashboardPreview() {
     });
     queryClient.setQueryData(["collections"], {
       collections: [
-        { id: "c1", slug: "munros", name: "Munros", type: "Peak List", description: null, coverImage: null, region: "Scotland", country: "GB", itemCount: 282, completedCount: 42, pct: 14.9 },
-        { id: "c2", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, coverImage: null, region: "Lake District", country: "GB", itemCount: 214, completedCount: 87, pct: 40.7 },
-        { id: "c3", slug: "national-3-peaks", name: "National 3 Peaks", type: "Challenge", description: null, coverImage: null, region: null, country: "GB", itemCount: 3, completedCount: 2, pct: 66.7 },
+        { id: "c1", slug: "munros", name: "Munros", type: "Peak List", description: null, coverImage: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=800&q=80", region: "Scotland", country: "GB", itemCount: 282, completedCount: 42, pct: 14.9 },
+        { id: "c2", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, coverImage: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80", region: "Lake District", country: "GB", itemCount: 214, completedCount: 87, pct: 40.7 },
+        { id: "c3", slug: "national-3-peaks", name: "National 3 Peaks", type: "Challenge", description: null, coverImage: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80", region: null, country: "GB", itemCount: 3, completedCount: 2, pct: 66.7 },
       ],
     });
   }, []);
@@ -79,6 +79,10 @@ import AchievementsPage from "./pages/AchievementsPage";
 import RegionPage from "./pages/RegionPage";
 import RegionsPage from "./pages/RegionsPage";
 import ProfilePage from "./pages/ProfilePage";
+import StatisticsPage from "./pages/StatisticsPage";
+import ConnectedSourcesPage from "./pages/ConnectedSourcesPage";
+import PlanPage from "./pages/PlanPage";
+import AdminPage from "./pages/AdminPage";
 
 // ── Root ─────────────────────────────────────────────────────────────────────
 
@@ -194,6 +198,33 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
+const statisticsRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: "/statistics",
+  component: StatisticsPage,
+});
+
+const connectedSourcesRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: "/connected-sources",
+  component: ConnectedSourcesPage,
+});
+
+const planRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: "/plan",
+  validateSearch: (search: Record<string, unknown>): { checkout?: string } => ({
+    checkout: typeof search["checkout"] === "string" ? search["checkout"] : undefined,
+  }),
+  component: PlanPage,
+});
+
+const adminRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: "/admin",
+  component: AdminPage,
+});
+
 // ── Preview route (dev-only) ──────────────────────────────────────────────────
 
 const previewDashboardRoute = createRoute({
@@ -278,11 +309,11 @@ const MOCK_WAINWRIGHTS_ITEMS = [
 
 const MOCK_COLLECTIONS_DATA = {
   collections: [
-    { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: "214 fells in the Lake District documented by Alfred Wainwright", coverImage: null, region: "Lake District", country: "GB", itemCount: 214, completedCount: 87, pct: 40.7 },
-    { id: "c2", slug: "munros", name: "Munros", type: "Peak List", description: "282 Scottish mountains over 3,000 ft", coverImage: null, region: "Scotland", country: "GB", itemCount: 282, completedCount: 42, pct: 14.9 },
-    { id: "c3", slug: "national-3-peaks", name: "National 3 Peaks", type: "Challenge", description: null, coverImage: null, region: null, country: "GB", itemCount: 3, completedCount: 2, pct: 66.7 },
-    { id: "c4", slug: "lake-district-landmarks", name: "Lake District Landmarks", type: "Landmarks", description: null, coverImage: null, region: "Lake District", country: "GB", itemCount: 45, completedCount: 18, pct: 40.0 },
-    { id: "c5", slug: "pennine-way", name: "Pennine Way", type: "National Trail", description: "268 miles from Edale to Kirk Yetholm", coverImage: null, region: "Northern England", country: "GB", itemCount: 24, completedCount: 9, pct: 37.5 },
+    { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: "214 fells in the Lake District documented by Alfred Wainwright", coverImage: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80", region: "Lake District", country: "GB", itemCount: 214, completedCount: 87, pct: 40.7 },
+    { id: "c2", slug: "munros", name: "Munros", type: "Peak List", description: "282 Scottish mountains over 3,000 ft", coverImage: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=800&q=80", region: "Scotland", country: "GB", itemCount: 282, completedCount: 42, pct: 14.9 },
+    { id: "c3", slug: "national-3-peaks", name: "National 3 Peaks", type: "Challenge", description: null, coverImage: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80", region: null, country: "GB", itemCount: 3, completedCount: 2, pct: 66.7 },
+    { id: "c4", slug: "lake-district-landmarks", name: "Lake District Landmarks", type: "Landmarks", description: null, coverImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80", region: "Lake District", country: "GB", itemCount: 45, completedCount: 18, pct: 40.0 },
+    { id: "c5", slug: "pennine-way", name: "Pennine Way", type: "National Trail", description: "268 miles from Edale to Kirk Yetholm", coverImage: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80", region: "Northern England", country: "GB", itemCount: 24, completedCount: 9, pct: 37.5 },
   ],
 };
 
@@ -290,7 +321,7 @@ function CollectionsPreview() {
   React.useEffect(() => {
     queryClient.setQueryData(["collections"], MOCK_COLLECTIONS_DATA);
     queryClient.setQueryData(["collections", "wainwrights", "items", 0], {
-      collection: { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, cover_image: null, region: "Lake District", country: "GB" },
+      collection: { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, cover_image: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80", region: "Lake District", country: "GB" },
       items: MOCK_WAINWRIGHTS_ITEMS,
     });
   }, []);
@@ -306,7 +337,7 @@ function CollectionsDetailPreview() {
   React.useEffect(() => {
     queryClient.setQueryData(["collections"], MOCK_COLLECTIONS_DATA);
     queryClient.setQueryData(["collections", "wainwrights", "items", 0], {
-      collection: { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, cover_image: null, region: "Lake District", country: "GB" },
+      collection: { id: "c1", slug: "wainwrights", name: "Wainwrights", type: "Peak List", description: null, cover_image: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80", region: "Lake District", country: "GB" },
       items: MOCK_WAINWRIGHTS_ITEMS,
     });
   }, []);
@@ -388,10 +419,10 @@ const MOCK_REGION_DATA = {
     { name: "Lake circuits",      value: 6,  max: 6,   color: "gold"   as const },
   ],
   missingNearby: [
-    { id: "p1", name: "Bowfell",              slug: "bowfell",              elevationM: 902, collected: false, image: null },
-    { id: "p2", name: "Blencathra",           slug: "blencathra",           elevationM: 868, collected: false, image: null },
-    { id: "p3", name: "Haystacks",            slug: "haystacks",            elevationM: 597, collected: false, image: null },
-    { id: "p4", name: "Old Man of Coniston",  slug: "old-man-of-coniston",  elevationM: 803, collected: false, image: null },
+    { id: "p1", name: "Bowfell",              slug: "bowfell",              elevationM: 902, collected: false, image: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?auto=format&fit=crop&w=240&q=80" },
+    { id: "p2", name: "Blencathra",           slug: "blencathra",           elevationM: 868, collected: false, image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=240&q=80" },
+    { id: "p3", name: "Haystacks",            slug: "haystacks",            elevationM: 597, collected: false, image: "https://images.unsplash.com/photo-1472791108553-c9405341e398?auto=format&fit=crop&w=240&q=80" },
+    { id: "p4", name: "Old Man of Coniston",  slug: "old-man-of-coniston",  elevationM: 803, collected: false, image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=240&q=80" },
   ],
   gapCount: 93,
 };
@@ -451,6 +482,10 @@ const routeTree = rootRoute.addChildren([
     regionsListRoute,
     regionRoute,
     profileRoute,
+    statisticsRoute,
+    connectedSourcesRoute,
+    planRoute,
+    adminRoute,
   ]),
   previewDashboardRoute,
   previewMapRoute,

@@ -21,6 +21,12 @@ export const users = pgTable(
     emailPreferences: jsonb("email_preferences")
       .notNull()
       .default({ assignments: true, billing: true, allNotifications: true }),
+    avatarUrl: text("avatar_url"),
+    plan: text("plan").notNull().default("free"),
+    planExpiresAt: timestamp("plan_expires_at", { withTimezone: true }),
+    billingCustomerId: text("billing_customer_id"),
+    billingSubscriptionId: text("billing_subscription_id"),
+    billingStatus: text("billing_status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

@@ -289,6 +289,7 @@ type CollectionRow = {
   region: string;
   country: string;
   sort_order: number;
+  cover_image?: string;
 };
 
 const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
@@ -301,6 +302,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Lake District",
     country: "England",
     sort_order: 1,
+    cover_image: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111102",
@@ -311,6 +313,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Scottish Highlands",
     country: "Scotland",
     sort_order: 2,
+    cover_image: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111107",
@@ -321,6 +324,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Yorkshire Dales",
     country: "England",
     sort_order: 7,
+    cover_image: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111108",
@@ -331,6 +335,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Snowdonia",
     country: "Wales",
     sort_order: 8,
+    cover_image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111121",
@@ -341,6 +346,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Scotland",
     country: "Scotland",
     sort_order: 21,
+    cover_image: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111122",
@@ -351,6 +357,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Scotland",
     country: "Scotland",
     sort_order: 22,
+    cover_image: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111123",
@@ -361,6 +368,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Southern Uplands",
     country: "Scotland",
     sort_order: 23,
+    cover_image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111124",
@@ -371,6 +379,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "England & Wales",
     country: "England",
     sort_order: 24,
+    cover_image: "https://images.unsplash.com/photo-1472791108553-c9405341e398?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111125",
@@ -381,6 +390,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "England & Wales",
     country: "England",
     sort_order: 25,
+    cover_image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111126",
@@ -391,6 +401,7 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "Lake District",
     country: "England",
     sort_order: 26,
+    cover_image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: "11111111-1111-1111-1111-111111111127",
@@ -401,12 +412,13 @@ const ALL_PEAK_COLLECTIONS: CollectionRow[] = [
     region: "United Kingdom",
     country: "United Kingdom",
     sort_order: 27,
+    cover_image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80",
   },
 ];
 
 const NATIONAL_TRAIL_META: Record<
   string,
-  { id: string; slug: string; description: string; region: string; country: string; sortOrder: number }
+  { id: string; slug: string; description: string; region: string; country: string; sortOrder: number; coverImage: string }
 > = {
   "Pennine Way": {
     id: "11111111-1111-1111-1111-111111111103",
@@ -415,6 +427,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Northern England",
     country: "England",
     sortOrder: 3,
+    coverImage: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80",
   },
   "South West Coast Path": {
     id: "11111111-1111-1111-1111-111111111104",
@@ -423,6 +436,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "South West England",
     country: "England",
     sortOrder: 4,
+    coverImage: "https://images.unsplash.com/photo-1505159940484-eb2b9f2588e2?auto=format&fit=crop&w=800&q=80",
   },
   "Cleveland Way": {
     id: "11111111-1111-1111-1111-111111111109",
@@ -431,6 +445,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "North Yorkshire",
     country: "England",
     sortOrder: 9,
+    coverImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80",
   },
   "Cotswold Way": {
     id: "11111111-1111-1111-1111-111111111110",
@@ -439,6 +454,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Cotswolds",
     country: "England",
     sortOrder: 10,
+    coverImage: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80",
   },
   "Hadrian's Wall Path": {
     id: "11111111-1111-1111-1111-111111111111",
@@ -447,6 +463,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Northern England",
     country: "England",
     sortOrder: 11,
+    coverImage: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?auto=format&fit=crop&w=800&q=80",
   },
   "North Downs Way": {
     id: "11111111-1111-1111-1111-111111111112",
@@ -455,6 +472,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "South East England",
     country: "England",
     sortOrder: 12,
+    coverImage: "https://images.unsplash.com/photo-1472791108553-c9405341e398?auto=format&fit=crop&w=800&q=80",
   },
   "Offa's Dyke Path": {
     id: "11111111-1111-1111-1111-111111111113",
@@ -463,6 +481,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Welsh Borders",
     country: "England/Wales",
     sortOrder: 13,
+    coverImage: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80",
   },
   "Peddars Way and Norfolk Coast Path": {
     id: "11111111-1111-1111-1111-111111111114",
@@ -471,6 +490,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Norfolk",
     country: "England",
     sortOrder: 14,
+    coverImage: "https://images.unsplash.com/photo-1505159940484-eb2b9f2588e2?auto=format&fit=crop&w=800&q=80",
   },
   "Pennine Bridleway": {
     id: "11111111-1111-1111-1111-111111111115",
@@ -479,6 +499,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Northern England",
     country: "England",
     sortOrder: 15,
+    coverImage: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80",
   },
   "The Ridgeway": {
     id: "11111111-1111-1111-1111-111111111116",
@@ -487,6 +508,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "South Central England",
     country: "England",
     sortOrder: 16,
+    coverImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80",
   },
   "South Downs Way": {
     id: "11111111-1111-1111-1111-111111111117",
@@ -495,6 +517,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "South East England",
     country: "England",
     sortOrder: 17,
+    coverImage: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80",
   },
   "Thames Path": {
     id: "11111111-1111-1111-1111-111111111118",
@@ -503,6 +526,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "South East England",
     country: "England",
     sortOrder: 18,
+    coverImage: "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=800&q=80",
   },
   "Yorkshire Wolds Way": {
     id: "11111111-1111-1111-1111-111111111119",
@@ -511,6 +535,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Yorkshire",
     country: "England",
     sortOrder: 19,
+    coverImage: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=800&q=80",
   },
   "Coast to Coast": {
     id: "11111111-1111-1111-1111-111111111120",
@@ -519,6 +544,7 @@ const NATIONAL_TRAIL_META: Record<
     region: "Northern England",
     country: "England",
     sortOrder: 20,
+    coverImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
   },
 };
 
@@ -586,10 +612,10 @@ const GALLOWAY_HILLS_RING: [number, number][] = [
 async function upsertCollections(collections: CollectionRow[]) {
   for (const c of collections) {
     await pool.query(
-      `INSERT INTO collections (id, slug, name, type, description, region, country, sort_order, item_count, created_at)
-       VALUES ($1, $2, $3, $4::collection_type, $5, $6, $7, $8, 0, NOW())
-       ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name`,
-      [c.id, c.slug, c.name, c.type, c.description, c.region, c.country, c.sort_order],
+      `INSERT INTO collections (id, slug, name, type, description, region, country, sort_order, cover_image, item_count, created_at)
+       VALUES ($1, $2, $3, $4::collection_type, $5, $6, $7, $8, $9, 0, NOW())
+       ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name, cover_image = EXCLUDED.cover_image`,
+      [c.id, c.slug, c.name, c.type, c.description, c.region, c.country, c.sort_order, c.cover_image ?? null],
     );
   }
 }
@@ -599,20 +625,22 @@ async function seedRegion(
   slug: string,
   country: string,
   description: string,
+  heroImage: string,
   ring: [number, number][],
 ): Promise<string> {
   const geom = wktMultiPolygon([ring]);
   const res = await pool.query<{ id: string }>(
-    `INSERT INTO regions (id, name, slug, country, geom, description, created_at)
+    `INSERT INTO regions (id, name, slug, country, geom, description, hero_image, created_at)
      VALUES (gen_random_uuid(), $1, $2, $3,
              ST_Multi(ST_GeomFromText($4, 4326)),
-             $5, NOW())
+             $5, $6, NOW())
      ON CONFLICT (slug) DO UPDATE
        SET name = EXCLUDED.name,
            geom = EXCLUDED.geom,
-           description = EXCLUDED.description
+           description = EXCLUDED.description,
+           hero_image = EXCLUDED.hero_image
      RETURNING id`,
-    [name, slug, country, geom, description],
+    [name, slug, country, geom, description, heroImage],
   );
   return res.rows[0]!.id;
 }
@@ -758,6 +786,7 @@ export async function run() {
       region: meta.region,
       country: meta.country,
       sort_order: meta.sortOrder,
+      cover_image: meta.coverImage,
     })),
   );
   // Region collections
@@ -771,6 +800,7 @@ export async function run() {
       region: "Cumbria",
       country: "England",
       sort_order: 5,
+      cover_image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: "11111111-1111-1111-1111-111111111106",
@@ -781,6 +811,7 @@ export async function run() {
       region: "Highlands",
       country: "Scotland",
       sort_order: 6,
+      cover_image: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=800&q=80",
     },
   ]);
   console.log("  ✓ Collections created\n");
@@ -789,18 +820,18 @@ export async function run() {
   console.log("Seeding regions…");
   const regionIds: Record<string, string> = {};
 
-  const regionDefs: [string, string, string, string, [number, number][]][] = [
-    ["Lake District", "lake-district", "England", "England's largest national park in Cumbria, encompassing the central and western fells.", LAKE_DISTRICT_RING],
-    ["Scottish Highlands", "scottish-highlands", "Scotland", "The mountainous region of northern Scotland, encompassing the majority of Scotland's highest peaks.", SCOTTISH_HIGHLANDS_RING],
-    ["Snowdonia", "snowdonia", "Wales", "Eryri National Park in north-west Wales, home to Snowdon, the Glyders, the Carneddau, and Tryfan.", SNOWDONIA_RING],
-    ["Brecon Beacons", "brecon-beacons", "Wales", "Bannau Brycheiniog National Park in south Wales, featuring Pen y Fan and the Black Mountains.", BRECON_BEACONS_RING],
-    ["Dartmoor", "dartmoor", "England", "A high moorland plateau in Devon, characterised by dramatic granite tors and open moorland.", DARTMOOR_RING],
-    ["Southern Uplands", "southern-uplands", "Scotland", "The rolling hills of southern Scotland stretching from the Cheviots to Galloway.", SOUTHERN_UPLANDS_RING],
-    ["Galloway Hills", "galloway-hills", "Scotland", "The wild, remote hills of south-west Scotland, including the highest point of the Southern Uplands, the Merrick.", GALLOWAY_HILLS_RING],
+  const regionDefs: [string, string, string, string, string, [number, number][]][] = [
+    ["Lake District", "lake-district", "England", "England's largest national park in Cumbria, encompassing the central and western fells.", "https://images.unsplash.com/photo-1614855999147-1f406a5735e4?auto=format&fit=crop&w=1600&q=80", LAKE_DISTRICT_RING],
+    ["Scottish Highlands", "scottish-highlands", "Scotland", "The mountainous region of northern Scotland, encompassing the majority of Scotland's highest peaks.", "https://images.unsplash.com/photo-1687876790754-2a92a8f0686d?auto=format&fit=crop&w=1600&q=80", SCOTTISH_HIGHLANDS_RING],
+    ["Snowdonia", "snowdonia", "Wales", "Eryri National Park in north-west Wales, home to Snowdon, the Glyders, the Carneddau, and Tryfan.", "https://images.unsplash.com/photo-1486576123198-d6afd2782a0a?auto=format&fit=crop&w=1600&q=80", SNOWDONIA_RING],
+    ["Brecon Beacons", "brecon-beacons", "Wales", "Bannau Brycheiniog National Park in south Wales, featuring Pen y Fan and the Black Mountains.", "https://images.unsplash.com/photo-1526639161668-9059dc1eb868?auto=format&fit=crop&w=1600&q=80", BRECON_BEACONS_RING],
+    ["Dartmoor", "dartmoor", "England", "A high moorland plateau in Devon, characterised by dramatic granite tors and open moorland.", "https://images.unsplash.com/photo-1715195606258-b5c586aeb5a3?auto=format&fit=crop&w=1600&q=80", DARTMOOR_RING],
+    ["Southern Uplands", "southern-uplands", "Scotland", "The rolling hills of southern Scotland stretching from the Cheviots to Galloway.", "https://images.unsplash.com/photo-1680936613337-fc829882b375?auto=format&fit=crop&w=1600&q=80", SOUTHERN_UPLANDS_RING],
+    ["Galloway Hills", "galloway-hills", "Scotland", "The wild, remote hills of south-west Scotland, including the highest point of the Southern Uplands, the Merrick.", "https://images.unsplash.com/photo-1609674750700-33895b9b7ce1?auto=format&fit=crop&w=1600&q=80", GALLOWAY_HILLS_RING],
   ];
 
-  for (const [name, slug, country, description, ring] of regionDefs) {
-    regionIds[slug] = await seedRegion(name, slug, country, description, ring);
+  for (const [name, slug, country, description, heroImage, ring] of regionDefs) {
+    regionIds[slug] = await seedRegion(name, slug, country, description, heroImage, ring);
     console.log(`  ✓ ${name}`);
   }
   console.log();

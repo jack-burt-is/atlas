@@ -14,15 +14,7 @@ export default function AuthLayout() {
     >
       <div style={{ width: "100%", maxWidth: 400 }}>
         <div style={{ textAlign: "center", marginBottom: "var(--space-7)" }}>
-          <div style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 700,
-            fontSize: 24,
-            letterSpacing: ".08em",
-            color: "var(--text-primary)",
-          }}>
-            ATLAS
-          </div>
+          <img src="/atlas-logo.svg" alt="Atlas" style={{ height: 28, marginBottom: "var(--space-2)" }} />
           <div className="eyebrow" style={{ marginTop: "var(--space-2)" }}>
             Completionist outdoor exploration
           </div>

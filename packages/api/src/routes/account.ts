@@ -1,14 +1,22 @@
 import { Hono } from "hono";
 import { eq } from "drizzle-orm";
 import { hash } from "@node-rs/argon2";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getDb, users, sessions, userIdentities } from "@atlas/db";
 import { requireAuth } from "../middleware/auth.js";
 import type { AppEnv } from "../types.js";
 
 const router = new Hono<AppEnv>();
+const s3 = new S3Client({});
 
 function safeUser(user: typeof users.$inferSelect) {
-  const { passwordHash: _pw, ...safe } = user;
+  const {
+    passwordHash: _pw,
+    billingCustomerId: _cid,
+    billingSubscriptionId: _sid,
+    ...safe
+  } = user;
   return safe;
 }
 
@@ -22,7 +30,12 @@ router.get("/me", requireAuth, (c) => {
 
 router.patch("/me", requireAuth, async (c) => {
   const user = c.get("user");
-  const body = await c.req.json<{ name?: string; currentPassword?: string; newPassword?: string }>();
+  const body = await c.req.json<{
+    name?: string;
+    avatarUrl?: string;
+    currentPassword?: string;
+    newPassword?: string;
+  }>();
 
   const updates: Partial<typeof users.$inferInsert> = {};
 
@@ -31,6 +44,10 @@ router.patch("/me", requireAuth, async (c) => {
       return c.json({ error: "name cannot be empty" }, 400);
     }
     updates.name = body.name.trim();
+  }
+
+  if (body.avatarUrl !== undefined) {
+    updates.avatarUrl = body.avatarUrl || null;
   }
 
   if (body.newPassword !== undefined) {
@@ -63,6 +80,41 @@ router.patch("/me", requireAuth, async (c) => {
   if (!updated) return c.json({ error: "Failed to update user" }, 500);
 
   return c.json({ user: safeUser(updated) });
+});
+
+// ─── POST /account/avatar/upload-url ─────────────────────────────────────────
+// Returns a presigned PUT URL so the client can upload directly to S3.
+
+router.post("/avatar/upload-url", requireAuth, async (c) => {
+  const user = c.get("user");
+  const bucket = process.env["AVATARS_BUCKET"];
+  if (!bucket) {
+    return c.json({ error: "Avatar storage not configured" }, 503);
+  }
+
+  const body = await c.req.json<{ contentType?: string }>().catch(() => ({ contentType: undefined }));
+  const contentType = body.contentType ?? "image/jpeg";
+
+  if (!contentType.startsWith("image/")) {
+    return c.json({ error: "Only image files are allowed" }, 400);
+  }
+
+  const key = `avatars/${user.id}/${Date.now()}`;
+
+  const url = await getSignedUrl(
+    s3,
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      ContentType: contentType,
+    }),
+    { expiresIn: 300 },
+  );
+
+  const region = process.env["AWS_REGION"] ?? "eu-west-2";
+  const publicUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+
+  return c.json({ uploadUrl: url, publicUrl });
 });
 
 // ─── DELETE /account/me ──────────────────────────────────────────────────────

@@ -34,7 +34,12 @@ function getIp(c: { req: { header(name: string): string | undefined } }): string
 }
 
 function safeUser(user: typeof users.$inferSelect) {
-  const { passwordHash: _pw, ...safe } = user;
+  const {
+    passwordHash: _pw,
+    billingCustomerId: _cid,
+    billingSubscriptionId: _sid,
+    ...safe
+  } = user;
   return safe;
 }
 

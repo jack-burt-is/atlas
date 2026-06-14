@@ -139,6 +139,7 @@ export const regions = pgTable(
     country: text("country"),
     geom: geometry("geom", "MultiPolygon"),
     description: text("description"),
+    heroImage: text("hero_image"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
