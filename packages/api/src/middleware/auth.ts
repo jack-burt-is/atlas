@@ -4,8 +4,14 @@ import { getDb, sessions, users } from "@atlas/db";
 import { getSessionId } from "../lib/session.js";
 import type { AppEnv } from "../types.js";
 
+function getBearerToken(c: Parameters<MiddlewareHandler>[0]): string | undefined {
+  const header = c.req.header("authorization");
+  if (header?.startsWith("Bearer ")) return header.slice(7);
+  return undefined;
+}
+
 export const requireAuth: MiddlewareHandler<AppEnv> = async (c, next) => {
-  const sessionId = getSessionId(c);
+  const sessionId = getSessionId(c) ?? getBearerToken(c);
   if (!sessionId) {
     return c.json({ error: "Unauthorized" }, 401);
   }

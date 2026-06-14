@@ -1,27 +1,7 @@
+import type { ActivityDetail, ActivitiesListResponse, Activity } from "@atlas/shared";
 import { apiDelete, apiGet, apiPatch } from "../lib/api-client";
 
-export interface Activity {
-  id: string;
-  name: string;
-  startedAt: string;
-  endedAt: string | null;
-  distanceM: number | null;
-  elevationGainM: number | null;
-  durationSeconds: number | null;
-  processedAt: string | null;
-  sourceType: string;
-}
-
-export interface ActivityDetail {
-  activity: Activity;
-  matchedPeaks: Array<{ peakId: string }>;
-  matchedSections: Array<{ sectionId: string }>;
-  matchedLandmarks: Array<{ landmarkId: string }>;
-}
-
-export interface ActivitiesListResponse {
-  activities: Activity[];
-}
+export type { Activity, ActivityDetail, ActivitiesListResponse } from "@atlas/shared";
 
 export function fetchActivity(id: string): Promise<ActivityDetail> {
   return apiGet(`/activities/${id}`);

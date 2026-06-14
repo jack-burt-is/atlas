@@ -1,17 +1,7 @@
+import type { User } from "@atlas/shared";
 import { apiGet, apiPost } from "../lib/api-client";
 
-export interface User {
-  id: string;
-  email: string;
-  name: string | null;
-  emailVerified: boolean;
-  isAdmin: boolean;
-  avatarUrl: string | null;
-  plan: string;
-  billingStatus: string;
-  planExpiresAt: string | null;
-  createdAt: string;
-}
+export type { User };
 
 export function fetchMe(): Promise<{ user: User }> {
   return apiGet("/auth/me");

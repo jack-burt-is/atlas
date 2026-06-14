@@ -1,11 +1,7 @@
+import type { StravaStatus } from "@atlas/shared";
 import { apiPost, apiDelete, apiGet } from "../lib/api-client";
 
-export interface StravaStatus {
-  connected: boolean;
-  lastSyncAt?: string | null;
-  activityCount?: number;
-  isSyncing?: boolean;
-}
+export type { StravaStatus } from "@atlas/shared";
 
 export function fetchStravaStatus(): Promise<StravaStatus> {
   return apiGet("/integrations/strava/status");

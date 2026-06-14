@@ -329,6 +329,100 @@ auth.post("/resend-verification", requireAuth, async (c) => {
   return c.json({ ok: true });
 });
 
+// ─── Mobile auth (returns session token instead of cookie) ────────────────
+
+auth.post("/mobile/login", async (c) => {
+  const ip = getIp(c);
+
+  const rl = checkRateLimit(`mobile-login:${ip ?? "unknown"}`, 10, 60 * 60 * 1000);
+  if (!rl.allowed) {
+    c.header("Retry-After", String(rl.retryAfterSeconds));
+    return c.json({ error: "Too many requests" }, 429);
+  }
+
+  const body = await c.req.json<{ email: string; password: string }>();
+  const { email, password } = body;
+
+  if (!email || !password) {
+    return c.json({ error: "email and password are required" }, 400);
+  }
+
+  const db = getDb();
+
+  const rows = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email.toLowerCase()))
+    .limit(1);
+
+  const user = rows[0];
+
+  if (!user || !user.passwordHash) {
+    return c.json({ error: "Invalid credentials" }, 401);
+  }
+
+  const valid = await verifyPassword(user.passwordHash, password);
+  if (!valid) {
+    return c.json({ error: "Invalid credentials" }, 401);
+  }
+
+  const session = await createSession(user.id, ip, c.req.header("user-agent"));
+
+  return c.json({ user: safeUser(user), sessionToken: session.id });
+});
+
+auth.post("/mobile/signup", async (c) => {
+  const ip = getIp(c);
+
+  const rl = checkRateLimit(`mobile-signup:${ip ?? "unknown"}`, 5, 60 * 60 * 1000);
+  if (!rl.allowed) {
+    c.header("Retry-After", String(rl.retryAfterSeconds));
+    return c.json({ error: "Too many requests" }, 429);
+  }
+
+  const body = await c.req.json<{ email: string; password: string; name: string }>();
+  const { email, password, name } = body;
+
+  if (!email || !password || !name) {
+    return c.json({ error: "email, password, and name are required" }, 400);
+  }
+  if (password.length < 8) {
+    return c.json({ error: "Password must be at least 8 characters" }, 400);
+  }
+
+  const db = getDb();
+
+  const existing = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, email.toLowerCase()))
+    .limit(1);
+
+  if (existing[0]) {
+    return c.json({ error: "Email already in use" }, 409);
+  }
+
+  const passwordHash = await hash(password);
+
+  const newUsers = await db
+    .insert(users)
+    .values({ email: email.toLowerCase(), name, passwordHash })
+    .returning();
+
+  const user = newUsers[0];
+  if (!user) return c.json({ error: "Failed to create user" }, 500);
+
+  await db.insert(userIdentities).values({
+    userId: user.id,
+    provider: "email",
+    providerId: user.email,
+  });
+
+  const session = await createSession(user.id, ip, c.req.header("user-agent"));
+
+  return c.json({ user: safeUser(user), sessionToken: session.id }, 201);
+});
+
 // ─── Current user ──────────────────────────────────────────────────────────
 
 auth.get("/me", requireAuth, (c) => {
